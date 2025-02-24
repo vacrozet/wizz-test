@@ -1,11 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('./models');
+const { Op } = require('sequelize');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/static`));
+
+app.post('/api/games/search', (req, res) => {
+  const { name, platform } = req.body;
+  return db.Game.findAll({ where: { name: { [Op.like]: `%${name}%` }, ...(platform ? { platform } : {}) } })
+    .then((games) => res.send(games))
+    .catch((err) => {
+      console.log('There was an error querying games', JSON.stringify(err));
+      return res.send(err);
+    });
+});
 
 app.get('/api/games', (req, res) => db.Game.findAll()
   .then((games) => res.send(games))
