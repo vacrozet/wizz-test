@@ -37,7 +37,7 @@ If you get an error like this when trying to build the project: `ERROR: Please i
 # Practical Assignments
 Pretend for a moment that you have been hired to work at Voodoo.  You have grabbed your first tickets to work on an internal game database application. 
 
-#### FEATURE A: Add Search to Game Database
+#### FEATURE A: Add Search to Game Database ~ 10 minutes
 The main users of the Game Database have requested that we add a search feature that will allow them to search by name and/or by platform.  The front end team has already created UI for these features and all that remains is for the API to implement the expected interface.  The new UI can be seen at `/search.html`
 
 The new UI sends 2 parameters via POST to a non-existent path on the API, `/api/games/search`
@@ -46,7 +46,7 @@ The parameters that are sent are `name` and `platform` and the expected behavior
 
 Once the new API method is in place, we can move `search.html` to `index.html` and remove `search.html` from the repo.
 
-#### FEATURE B: Populate your database with the top 100 apps
+#### FEATURE B: Populate your database with the top 100 apps ~ 20 minutes
 Add a populate button that calls a new route `/api/games/populate`. This route should populate your database with the top 100 games in the App Store and Google Play Store.
 To do this, our data team have put in place 2 files at your disposal in an S3 bucket in JSON format:
 
@@ -68,3 +68,5 @@ Let's pretend our data team is now delivering new files every day into the S3 bu
 every day through the populate API. Could you describe a suitable solution to automate this? Feel free to propose architectural changes.
 
 
+Feature A - ~10 minutes
+Feature A - ~20 minutes
