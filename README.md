@@ -63,10 +63,54 @@ Many other applications at Voodoo will use consume this API.
 We are planning to put this project in production. According to you, what are the missing pieces to make this project production ready? 
 Please elaborate an action plan.
 
+### Answer 1: 
+- Sqlite3 c'est bien mais pour le localhost mais ce n'est pas adapté pour la prodution, il faudrait configurer une base MySql ou PostgreSQL. (biensur il faudra modifier le fichier config.json).
+- Dans le fichier config.json, la base de developpement et prod sont les mêmes ? Ce n'est pas une bonne pratique pour mettre en prod.
+- Ajouter une CI/CD pour automatiser les tests et le deploiement
+- Il faudrait installer dotenv pour la gestion des variables d'environnement
+- On pourrait ajouter un header de sécurité (helmet). l'api n'est pas protégé
+- Les logs ne sont pas exploitables -> Ajouter le package winston pour les rendre plus lisibles et faciliter leur traitement. 
+- Ajouter un middleware pour la gestion des erreurs
+- c'est optionnel mais mettre des urls en dur dans le code n'est pas la bonne pratique si on veut pousser en prod (à mon sens)
+- 
 #### Question 2:
 Let's pretend our data team is now delivering new files every day into the S3 bucket, and our service needs to ingest those files
 every day through the populate API. Could you describe a suitable solution to automate this? Feel free to propose architectural changes.
 
+### Answer 2:
+
+(Résumé)
+La route que j'ai faite est très efficace niveau mémoire, le stream permet de traité les données dès leur arrivée.
+Cependant, il y a un inconvénient : avec mon bulkCreate, je ne gère pas les doublons.
+
+Solution pour éviter les doublons :
+- Avant chaque upload, il faudrait supprimer les anciennes données ou
+- Ajouter une clé unique au modèle (par exemple storeId), puis effectuer un upsert.
+
+== Très intéressant pour du gros volume ==
+
+Sinon on peut passer avec un worker queue (type rabbitMq / kafka (plus compliqué à mettre en place, vue chez Epsor)),
+qui recevrait les messages et les traiterait au fur et à mesure.
+
+Cela permettrait de:
+- Améliorer la scalabilité
+- Ne pas bloquer le thread principale (NodeJs est monothread)
+- Améliorer la répartition des charges
+
+Actualisation des datas:
+- Il serait de bonne pratique d'extraire le code de la route /api/games/populate dans un module séparé.
+  
+Cela permettrait de pouvoir déclanher l'actualisation:
+- via la route 
+- Via un cron 
+- Via un hook (AWS S3 Event Notifications par exemple)
+
 
 Feature A - ~10 minutes
+
 Feature A - ~20 minutes
+
+Answer 1 - ~20 minutes
+
+Answer 2 - ~20 minutes
+  
